@@ -1,0 +1,16 @@
+<resources>
+    <!-- Registration screen strings -->
+    <string name="register">Register</string>
+    <string name="account_type">Account Type:</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="driver_info">Driver Information</string>
+    <string name="year">Year</string>
+    <string name="make">Make</string>
+    <string name="model">Model</string>
+    <string name="license_plate">License Plate</string>
+    <string name="state">State</string>
+</resources>

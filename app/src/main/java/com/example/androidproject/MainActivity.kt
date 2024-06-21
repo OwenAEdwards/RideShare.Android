@@ -7,41 +7,33 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.androidproject.ui.theme.AndroidProjectTheme
 
+// MainActivity serves as the entry point for the application
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Enable edge-to-edge layout for immersive UI experience
         enableEdgeToEdge()
         setContent {
             AndroidProjectTheme {
+                // Scaffold provides a layout structure for the app's content
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                            name = "Android",
-                            modifier = Modifier.padding(innerPadding)
-                    )
+                    // RegistrationComposable contains the registration screen UI
+                    RegistrationComposable(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
 
+// Composable function for the registration screen UI
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-            text = "Hello $name!",
-            modifier = modifier
+fun RegistrationComposable(modifier: Modifier = Modifier) {
+    RegistrationScreen(
+        validator = RegistrationInputValidator(),
+        modifier = modifier
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AndroidProjectTheme {
-        Greeting("Android")
-    }
 }
