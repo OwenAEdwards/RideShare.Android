@@ -35,22 +35,55 @@ fun RegistrationScreen(validator: RegistrationInputValidator, modifier: Modifier
     // Column layout for arranging UI elements vertically
     Column(modifier = modifier.padding(16.dp)) {
         // UI elements for user input
-        AccountTypeSwitch(onAccountTypeChange = { isDriverSelected = it })
-        EmailInput(onEmailChange = { email = it })
-        PasswordInput(onPasswordChange = { password = it })
+        AccountTypeSwitch(onAccountTypeChange = {
+            isDriverSelected = it
+            errorMessage = "" // Reset error message when switching account type
+        })
+        EmailInput(onEmailChange = {
+            email = it
+            errorMessage = "" // Reset error message when input changes
+        })
+        PasswordInput(onPasswordChange = {
+            password = it
+            errorMessage = "" // Reset error message when input changes
+        })
         NameInputs(
-            onFirstNameChange = { firstName = it },
-            onLastNameChange = { lastName = it }
+            onFirstNameChange = {
+                firstName = it
+                errorMessage = "" // Reset error message when input changes
+            },
+            onLastNameChange = {
+                lastName = it
+                errorMessage = "" // Reset error message when input changes
+            }
         )
-        PhoneNumberInput(onPhoneNumberChange = { phoneNumber = it })
+        PhoneNumberInput(onPhoneNumberChange = {
+            phoneNumber = it
+            errorMessage = "" // Reset error message when input changes
+        })
 
         // Additional UI elements for driver account input
         if (isDriverSelected) {
-            YearInput(onYearChange = { year = it })
-            MakeInput(onMakeChange = { make = it })
-            ModelInput(onModelChange = { model = it })
-            LicensePlateInput(onLicensePlateChange = { licensePlate = it })
-            StateInput(onStateChange = { state = it })
+            YearInput(onYearChange = {
+                year = it
+                errorMessage = "" // Reset error message when input changes
+            })
+            MakeInput(onMakeChange = {
+                make = it
+                errorMessage = "" // Reset error message when input changes
+            })
+            ModelInput(onModelChange = {
+                model = it
+                errorMessage = "" // Reset error message when input changes
+            })
+            LicensePlateInput(onLicensePlateChange = {
+                licensePlate = it
+                errorMessage = "" // Reset error message when input changes
+            })
+            StateInput(onStateChange = {
+                state = it
+                errorMessage = "" // Reset error message when input changes
+            })
         }
 
         // Validation logic for registration input

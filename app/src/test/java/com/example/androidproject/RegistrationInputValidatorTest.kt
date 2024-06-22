@@ -13,7 +13,7 @@ class RegistrationInputValidatorTest {
     @Mock
     lateinit var mockValidationErrorCallback: (String) -> Unit
 
-    lateinit var validator: RegistrationInputValidator
+    private lateinit var validator: RegistrationInputValidator
 
     @Before
     fun setup() {
