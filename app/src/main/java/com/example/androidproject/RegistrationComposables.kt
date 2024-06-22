@@ -1,12 +1,14 @@
 package com.example.androidproject
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +19,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -38,7 +40,7 @@ fun AccountTypeSwitch(
     modifier: Modifier = Modifier,
     onAccountTypeChange: (Boolean) -> Unit, // Callback for account type selection (driver/passenger)
 ) {
-    var isDriver by remember { mutableStateOf(false) } // Initial state: Passenger (false)
+    var isDriver by rememberSaveable { mutableStateOf(false) } // Initial state: Passenger (false)
 
     Row(modifier = modifier) {
         Text(text = stringResource(R.string.account_type))
@@ -117,7 +119,7 @@ fun EmailInput(
     isError: Boolean = false,
     errorMessage: String? = null,
 ) {
-    var emailState by remember { mutableStateOf<String?>(null) }
+    var emailState by rememberSaveable { mutableStateOf<String?>(null) }
     TextInput(
         modifier = modifier.testTag("email_input"),
         value = emailState,
@@ -153,7 +155,7 @@ fun PasswordInput(
     isError: Boolean = false,
     errorMessage: String? = null,
 ) {
-    var passwordState by remember { mutableStateOf<String?>(null) }
+    var passwordState by rememberSaveable { mutableStateOf<String?>(null) }
     TextInput(
         modifier = modifier.testTag("password_input"),
         value = passwordState,
@@ -191,7 +193,7 @@ fun NameInputs(
     errorMessage: String? = null
 ) {
     Column(modifier = modifier) {
-        var firstNameState by remember { mutableStateOf<String?>(null) } // State variable for first name
+        var firstNameState by rememberSaveable { mutableStateOf<String?>(null) } // State variable for first name
         TextInput(
             modifier = Modifier.fillMaxWidth(),
             value = firstNameState,
@@ -209,7 +211,7 @@ fun NameInputs(
             errorMessage = errorMessage
         )
         Spacer(modifier = Modifier.height(8.dp))
-        var lastNameState by remember { mutableStateOf("") } // State variable for last name
+        var lastNameState by rememberSaveable { mutableStateOf("") } // State variable for last name
         TextInput(
             modifier = Modifier.fillMaxWidth(),
             value = lastNameState,
@@ -244,7 +246,7 @@ fun PhoneNumberInput(
     isError: Boolean = false,
     errorMessage: String? = null
 ) {
-    var phoneNumber by remember { mutableStateOf("") } // State variable for phone number
+    var phoneNumber by rememberSaveable { mutableStateOf("") } // State variable for phone number
 
     // Function to format phone number with parentheses and dashes (US format)
     fun formatPhoneNumber(number: String): String {
@@ -278,9 +280,65 @@ fun PhoneNumberInput(
 }
 
 /**
- * Composable function for year input field.
+ * Reusable ComboBox input field.
  *
- * @param modifier Modifier for the TextInput.
+ * @param modifier Modifier for the ComboBox.
+ * @param options List of options for the ComboBox.
+ * @param onOptionSelected Callback function to handle option selection.
+ * @param label Composable function for the label.
+ * @param isError Flag indicating if there's an error in input validation.
+ * @param errorMessage Error message to display if isError is true.
+ */
+@Composable
+fun ComboBoxInput(
+    modifier: Modifier = Modifier,
+    options: List<String>,
+    onOptionSelected: (String) -> Unit,
+    label: @Composable () -> Unit,
+    isError: Boolean = false,
+    errorMessage: String? = null
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    var selectedOption by rememberSaveable { mutableStateOf("") }
+
+    Column(modifier = modifier.fillMaxWidth()) {
+        TextField(
+            value = selectedOption,
+            onValueChange = { selectedOption = it },
+            label = label,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = !expanded },
+            isError = isError,
+            readOnly = true
+        )
+
+        if (expanded) {
+            options.forEach { option ->
+                Text(
+                    text = option,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            selectedOption = option
+                            expanded = false
+                            onOptionSelected(option)
+                        }
+                        .padding(8.dp)
+                )
+            }
+        }
+
+        if (isError && errorMessage != null) {
+            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+        }
+    }
+}
+
+/**
+ * Composable function for year input field using a combo box.
+ *
+ * @param modifier Modifier for the ComboBoxInput.
  * @param onYearChange Callback function to handle year changes.
  * @param isError Flag indicating if there's an error in input validation.
  * @param errorMessage Error message to display if isError is true.
@@ -292,31 +350,24 @@ fun YearInput(
     isError: Boolean = false,
     errorMessage: String? = null
 ) {
-    var yearState by remember { mutableStateOf<String?>(null) } // State variable for year
+    // TODO: Replace carYears placeholder variable here with an API call for valid year and logic given make and model combinations
+    //  - API call might be better served in RegistrationScreen.kt
+    val carYears = (1980..2023).map { it.toString() }
 
-    TextInput(
+    ComboBoxInput(
         modifier = modifier,
-        value = yearState,
-        onValueChange = { newYear ->
-            try {
-                yearState = newYear
-                onYearChange(newYear) // Pass year to callback
-            }
-            catch (e: Exception) {
-                Log.e("YearInput", "Error changing year", e)
-            }
-        },
+        options = carYears,
+        onOptionSelected = onYearChange,
         label = { Text(stringResource(R.string.year)) },
-        keyboardType = KeyboardType.Number, // Set keyboard type for numbers
         isError = isError,
         errorMessage = errorMessage
     )
 }
 
 /**
- * Composable function for car make input field.
+ * Composable function for car make input field using a combo box.
  *
- * @param modifier Modifier for the TextInput.
+ * @param modifier Modifier for the ComboBoxInput.
  * @param onMakeChange Callback function to handle car make changes.
  * @param isError Flag indicating if there's an error in input validation.
  * @param errorMessage Error message to display if isError is true.
@@ -328,30 +379,24 @@ fun MakeInput(
     isError: Boolean = false,
     errorMessage: String? = null
 ) {
-    var makeState by remember { mutableStateOf<String?>(null) } // State variable for make
-    TextInput(
+    // TODO: Replace carMakes placeholder variable here with an API call for valid make and logic given year and model combinations
+    //  - API call might be better served in RegistrationScreen.kt
+    val carMakes = listOf("Toyota", "Honda", "Ford", "Chevrolet", "BMW", "Audi")
+
+    ComboBoxInput(
         modifier = modifier,
-        value = makeState,
-        onValueChange = { newMake ->
-            try {
-                makeState = newMake
-                onMakeChange(newMake)
-            }
-            catch (e: Exception) {
-                Log.e("MakeInput", "Error changing make", e)
-            }
-        },
+        options = carMakes,
+        onOptionSelected = onMakeChange,
         label = { Text(stringResource(R.string.make)) },
-        keyboardType = KeyboardType.Text, // Allow text input for make
         isError = isError,
         errorMessage = errorMessage
     )
 }
 
 /**
- * Composable function for car model input field.
+ * Composable function for car model input field using a combo box.
  *
- * @param modifier Modifier for the TextInput.
+ * @param modifier Modifier for the ComboBoxInput.
  * @param onModelChange Callback function to handle car model changes.
  * @param isError Flag indicating if there's an error in input validation.
  * @param errorMessage Error message to display if isError is true.
@@ -363,21 +408,15 @@ fun ModelInput(
     isError: Boolean = false,
     errorMessage: String? = null
 ) {
-    var modelState by remember { mutableStateOf<String?>(null) } // State variable for model
-    TextInput(
+    // TODO: Replace carModels placeholder variable here with an API call for valid model and logic given year and make combinations
+    //  - API call might be better served in RegistrationScreen.kt
+    val carModels = listOf("Model S", "Model X", "Model 3", "Model Y")
+
+    ComboBoxInput(
         modifier = modifier,
-        value = modelState,
-        onValueChange = { newModel ->
-            try {
-                modelState = newModel
-                onModelChange(newModel)
-            }
-            catch (e: Exception) {
-                Log.e("ModelInput", "Error changing model", e)
-            }
-        },
+        options = carModels,
+        onOptionSelected = onModelChange,
         label = { Text(stringResource(R.string.model)) },
-        keyboardType = KeyboardType.Text, // Allow text input for model
         isError = isError,
         errorMessage = errorMessage
     )
@@ -398,7 +437,7 @@ fun LicensePlateInput(
     isError: Boolean = false,
     errorMessage: String? = null
 ) {
-    var licensePlate by remember { mutableStateOf("") } // State variable for license plate
+    var licensePlate by rememberSaveable { mutableStateOf("") } // State variable for license plate
 
     // Function to format license plate with uppercase letters and maximum of 7 characters
     fun formatLicensePlate(plate: String): String {
@@ -425,9 +464,9 @@ fun LicensePlateInput(
 }
 
 /**
- * Composable function for state input field.
+ * Composable function for state input field using ComboBox.
  *
- * @param modifier Modifier for the TextInput.
+ * @param modifier Modifier for the ComboBox.
  * @param onStateChange Callback function to handle state changes.
  * @param isError Flag indicating if there's an error in input validation.
  * @param errorMessage Error message to display if isError is true.
@@ -439,23 +478,19 @@ fun StateInput(
     isError: Boolean = false,
     errorMessage: String? = null
 ) {
-    var state by remember { mutableStateOf("") } // State variable for state abbreviation
+    val usStates = listOf(
+        "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+        "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+        "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+        "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+        "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+    )
 
-    TextInput(
+    ComboBoxInput(
         modifier = modifier,
-        value = state,
-        onValueChange = { newState ->
-            try {
-                state = newState.uppercase()
-                    .take(2) // Take maximum 2 characters, convert to uppercase
-                onStateChange(state) // Pass state abbreviation to callback
-            }
-            catch (e: Exception) {
-                Log.e("StateInput", "Error changing state", e)
-            }
-        },
+        options = usStates,
+        onOptionSelected = onStateChange,
         label = { Text(stringResource(R.string.state)) },
-        keyboardType = KeyboardType.Text, // Allow alphanumeric input
         isError = isError,
         errorMessage = errorMessage
     )

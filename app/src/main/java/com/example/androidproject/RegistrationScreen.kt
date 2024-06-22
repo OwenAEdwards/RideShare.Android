@@ -7,7 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,20 +17,20 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun RegistrationScreen(validator: RegistrationInputValidator, modifier: Modifier = Modifier) {
     // State variables for storing user inputs
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
-    var isDriverSelected by remember { mutableStateOf(false) } // Account type
-    var errorMessage by remember { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var firstName by rememberSaveable { mutableStateOf("") }
+    var lastName by rememberSaveable { mutableStateOf("") }
+    var phoneNumber by rememberSaveable { mutableStateOf("") }
+    var isDriverSelected by rememberSaveable { mutableStateOf(false) } // Account type
+    var errorMessage by rememberSaveable { mutableStateOf("") }
 
     // Additional state variables for driver account
-    var year by remember { mutableStateOf("") }
-    var make by remember { mutableStateOf("") }
-    var model by remember { mutableStateOf("") }
-    var licensePlate by remember { mutableStateOf("") }
-    var state by remember { mutableStateOf("") }
+    var year by rememberSaveable { mutableStateOf("") }
+    var make by rememberSaveable { mutableStateOf("") }
+    var model by rememberSaveable { mutableStateOf("") }
+    var licensePlate by rememberSaveable { mutableStateOf("") }
+    var state by rememberSaveable { mutableStateOf("") }
 
     // Column layout for arranging UI elements vertically
     Column(modifier = modifier.padding(16.dp)) {
@@ -64,26 +64,23 @@ fun RegistrationScreen(validator: RegistrationInputValidator, modifier: Modifier
 
         // Additional UI elements for driver account input
         if (isDriverSelected) {
-            YearInput(onYearChange = {
-                year = it
-                errorMessage = "" // Reset error message when input changes
-            })
-            MakeInput(onMakeChange = {
-                make = it
-                errorMessage = "" // Reset error message when input changes
-            })
-            ModelInput(onModelChange = {
-                model = it
-                errorMessage = "" // Reset error message when input changes
-            })
+            YearInput(onYearChange = { year = it },
+                isError = false // Prevents UI from displaying any error messages or applying error-specific styling when Composable is initially rendered
+            )
+            MakeInput(onMakeChange = { make = it },
+                isError = false // Prevents UI from displaying any error messages or applying error-specific styling when Composable is initially rendered
+            )
+            ModelInput(onModelChange = { model = it },
+                isError = false // Prevents UI from displaying any error messages or applying error-specific styling when Composable is initially rendered
+            )
             LicensePlateInput(onLicensePlateChange = {
                 licensePlate = it
                 errorMessage = "" // Reset error message when input changes
             })
-            StateInput(onStateChange = {
-                state = it
-                errorMessage = "" // Reset error message when input changes
-            })
+            StateInput(
+                onStateChange = { state = it },
+                isError = false // Prevents UI from displaying any error messages or applying error-specific styling when Composable is initially rendered
+            )
         }
 
         // Validation logic for registration input

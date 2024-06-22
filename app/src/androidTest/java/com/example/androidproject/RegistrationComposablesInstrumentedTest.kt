@@ -2,6 +2,7 @@ package com.example.androidproject
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTextInput
@@ -10,6 +11,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.androidproject.ui.theme.AndroidProjectTheme
@@ -254,20 +256,126 @@ class RegistrationComposablesInstrumentedTest {
         assert(enteredPhoneNumber == phoneNumberFormatted.replace(Regex("[^\\d]"), "")) { "Callback for phone number (formatted) was not invoked with correct value" }
     }
 
+    /**
+     * Tests the YearInput component's functionality.
+     * Verifies dropdown behavior, year selection, and callback function for year input.
+     */
+    // TODO: Rewrite test after properly implementing correct year, make, and model dropdown logic
     @Test
     fun testYearInput() {
-        // TODO: Implement test for year input field
+        var selectedYear = ""
+
+        // Set up the Composable under test
+        composeTestRule.setContent {
+            YearInput(
+                modifier = Modifier.testTag("year_input"),
+                onYearChange = { selectedYear = it },
+                isError = false,
+                errorMessage = null
+            )
+        }
+
+        // Verify that the YearInput composable is displayed
+        composeTestRule.onNodeWithTag("year_input").assertExists()
+
+        // Verify the initial selected year
+        composeTestRule.onNodeWithText("Select Year").assertIsDisplayed()
+
+        // Click on the YearInput to expand the ComboBox
+        composeTestRule.onNodeWithTag("year_input").performClick()
+
+        // Verify that the ComboBox options are displayed
+        composeTestRule.onAllNodesWithText("1980", substring = true).assertCountEquals(1)
+        composeTestRule.onAllNodesWithText("2023", substring = true).assertCountEquals(1)
+        // Verify other years as needed
+
+        // Select a year from the ComboBox options
+        composeTestRule.onNodeWithText("2020", substring = true).performClick()
+
+        // Verify that the selected year is updated
+        assert(selectedYear == "2020")
     }
 
+    /**
+     * Tests the MakeInput component's functionality.
+     * Verifies dropdown behavior, make selection, and callback function for make input.
+     */
+    // TODO: Rewrite test after properly implementing correct year, make, and model dropdown logic
     @Test
     fun testMakeInput() {
-        // TODO: Implement test for make input field
+        var selectedMake = ""
+
+        // Set up the Composable under test
+        composeTestRule.setContent {
+            MakeInput(
+                modifier = Modifier.testTag("make_input"),
+                onMakeChange = { selectedMake = it },
+                isError = false,
+                errorMessage = null
+            )
+        }
+
+        // Verify that the MakeInput composable is displayed
+        composeTestRule.onNodeWithTag("make_input").assertExists()
+
+        // Verify the initial selected make
+        composeTestRule.onNodeWithText("Select Make").assertIsDisplayed()
+
+        // Click on the MakeInput to expand the ComboBox
+        composeTestRule.onNodeWithTag("make_input").performClick()
+
+        // Verify that the ComboBox options are displayed
+        composeTestRule.onAllNodesWithText("Toyota", substring = true).assertCountEquals(1)
+        composeTestRule.onAllNodesWithText("Audi", substring = true).assertCountEquals(1)
+        // Verify other makes as needed
+
+        // Select a make from the ComboBox options
+        composeTestRule.onNodeWithText("Ford", substring = true).performClick()
+
+        // Verify that the selected make is updated
+        assert(selectedMake == "Ford")
     }
 
+    /**
+     * Tests the ModelInput component's functionality.
+     * Verifies dropdown behavior, model selection, and callback function for model input.
+     */
+    // TODO: Rewrite test after properly implementing correct year, make, and model dropdown logic
     @Test
     fun testModelInput() {
-        // TODO: Implement test for model input field
+        var selectedModel = ""
+
+        // Set up the Composable under test
+        composeTestRule.setContent {
+            ModelInput(
+                modifier = Modifier.testTag("model_input"),
+                onModelChange = { selectedModel = it },
+                isError = false,
+                errorMessage = null
+            )
+        }
+
+        // Verify that the ModelInput composable is displayed
+        composeTestRule.onNodeWithTag("model_input").assertExists()
+
+        // Verify the initial selected model
+        composeTestRule.onNodeWithText("Select Model").assertIsDisplayed()
+
+        // Click on the ModelInput to expand the ComboBox
+        composeTestRule.onNodeWithTag("model_input").performClick()
+
+        // Verify that the ComboBox options are displayed
+        composeTestRule.onAllNodesWithText("Model S", substring = true).assertCountEquals(1)
+        composeTestRule.onAllNodesWithText("Model Y", substring = true).assertCountEquals(1)
+        // Verify other models as needed
+
+        // Select a model from the ComboBox options
+        composeTestRule.onNodeWithText("Model 3", substring = true).performClick()
+
+        // Verify that the selected model is updated
+        assert(selectedModel == "Model 3")
     }
+
 
     /**
      * Tests the LicensePlateInput component's functionality.
@@ -302,9 +410,42 @@ class RegistrationComposablesInstrumentedTest {
         assert(enteredLicensePlate == licensePlate) { "Callback for license plate was not invoked with correct value" }
     }
 
+    /**
+     * Tests the StateInput component's functionality.
+     * Verifies dropdown behavior, selection of states, and callback function for state input.
+     */
     @Test
     fun testStateInput() {
-        // TODO: Implement test for state input field
+        var selectedState = ""
+
+        composeTestRule.setContent {
+            StateInput(
+                modifier = Modifier.testTag("state_input"),
+                onStateChange = { selectedState = it },
+                isError = false,
+                errorMessage = null
+            )
+        }
+
+        // Verify that the StateInput composable is displayed
+        composeTestRule.onNodeWithTag("state_input").assertExists()
+
+        // Verify the initial selected state
+        composeTestRule.onNodeWithText("Select State").assertIsDisplayed()
+
+        // Click on the StateInput to expand the ComboBox
+        composeTestRule.onNodeWithTag("state_input").performClick()
+
+        // Verify that the ComboBox options are displayed
+        composeTestRule.onAllNodesWithText("AL", substring = true).assertCountEquals(1)
+        composeTestRule.onAllNodesWithText("AK", substring = true).assertCountEquals(1)
+        // Verify other states as needed
+
+        // Select a state from the ComboBox options
+        composeTestRule.onNodeWithText("AK", substring = true).performClick()
+
+        // Verify that the selected state is updated
+        assert(selectedState == "AK")
     }
 
     /**
