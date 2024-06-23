@@ -1,21 +1,24 @@
 package com.example.androidproject
 
 import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -287,50 +290,59 @@ fun PhoneNumberInput(
  * @param onOptionSelected Callback function to handle option selection.
  * @param label Composable function for the label.
  * @param isError Flag indicating if there's an error in input validation.
- * @param errorMessage Error message to display if isError is true.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComboBoxInput(
     modifier: Modifier = Modifier,
     options: List<String>,
     onOptionSelected: (String) -> Unit,
-    label: @Composable () -> Unit,
-    isError: Boolean = false,
-    errorMessage: String? = null
+    label: @Composable (() -> Unit)? = null,
+    isError: Boolean = false
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     var selectedOption by rememberSaveable { mutableStateOf("") }
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier.fillMaxWidth()
+    ) {
         TextField(
             value = selectedOption,
             onValueChange = { selectedOption = it },
+            readOnly = true,
             label = label,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(
+                    expanded = expanded
+                )
+            },
             modifier = Modifier
-                .fillMaxWidth()
-                .clickable { expanded = !expanded },
+                .menuAnchor()
+                .fillMaxWidth(),
             isError = isError,
-            readOnly = true
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                disabledContainerColor = MaterialTheme.colorScheme.surface
+            )
         )
 
-        if (expanded) {
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
             options.forEach { option ->
-                Text(
-                    text = option,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            selectedOption = option
-                            expanded = false
-                            onOptionSelected(option)
-                        }
-                        .padding(8.dp)
+                DropdownMenuItem(
+                    text = { Text(option) },
+                    onClick = {
+                        selectedOption = option
+                        onOptionSelected(option)
+                        expanded = false
+                    }
                 )
             }
-        }
-
-        if (isError && errorMessage != null) {
-            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
         }
     }
 }
@@ -341,14 +353,12 @@ fun ComboBoxInput(
  * @param modifier Modifier for the ComboBoxInput.
  * @param onYearChange Callback function to handle year changes.
  * @param isError Flag indicating if there's an error in input validation.
- * @param errorMessage Error message to display if isError is true.
  */
 @Composable
 fun YearInput(
     modifier: Modifier = Modifier,
     onYearChange: (String) -> Unit,
-    isError: Boolean = false,
-    errorMessage: String? = null
+    isError: Boolean = false
 ) {
     // TODO: Replace carYears placeholder variable here with an API call for valid year and logic given make and model combinations
     //  - API call might be better served in RegistrationScreen.kt
@@ -359,8 +369,7 @@ fun YearInput(
         options = carYears,
         onOptionSelected = onYearChange,
         label = { Text(stringResource(R.string.year)) },
-        isError = isError,
-        errorMessage = errorMessage
+        isError = isError
     )
 }
 
@@ -370,14 +379,12 @@ fun YearInput(
  * @param modifier Modifier for the ComboBoxInput.
  * @param onMakeChange Callback function to handle car make changes.
  * @param isError Flag indicating if there's an error in input validation.
- * @param errorMessage Error message to display if isError is true.
  */
 @Composable
 fun MakeInput(
     modifier: Modifier = Modifier,
     onMakeChange: (String) -> Unit,
-    isError: Boolean = false,
-    errorMessage: String? = null
+    isError: Boolean = false
 ) {
     // TODO: Replace carMakes placeholder variable here with an API call for valid make and logic given year and model combinations
     //  - API call might be better served in RegistrationScreen.kt
@@ -388,8 +395,7 @@ fun MakeInput(
         options = carMakes,
         onOptionSelected = onMakeChange,
         label = { Text(stringResource(R.string.make)) },
-        isError = isError,
-        errorMessage = errorMessage
+        isError = isError
     )
 }
 
@@ -399,14 +405,12 @@ fun MakeInput(
  * @param modifier Modifier for the ComboBoxInput.
  * @param onModelChange Callback function to handle car model changes.
  * @param isError Flag indicating if there's an error in input validation.
- * @param errorMessage Error message to display if isError is true.
  */
 @Composable
 fun ModelInput(
     modifier: Modifier = Modifier,
     onModelChange: (String) -> Unit,
-    isError: Boolean = false,
-    errorMessage: String? = null
+    isError: Boolean = false
 ) {
     // TODO: Replace carModels placeholder variable here with an API call for valid model and logic given year and make combinations
     //  - API call might be better served in RegistrationScreen.kt
@@ -417,8 +421,7 @@ fun ModelInput(
         options = carModels,
         onOptionSelected = onModelChange,
         label = { Text(stringResource(R.string.model)) },
-        isError = isError,
-        errorMessage = errorMessage
+        isError = isError
     )
 }
 
@@ -428,14 +431,12 @@ fun ModelInput(
  * @param modifier Modifier for the TextInput.
  * @param onLicensePlateChange Callback function to handle license plate changes.
  * @param isError Flag indicating if there's an error in input validation.
- * @param errorMessage Error message to display if isError is true.
  */
 @Composable
 fun LicensePlateInput(
     modifier: Modifier = Modifier,
     onLicensePlateChange: (String) -> Unit,
-    isError: Boolean = false,
-    errorMessage: String? = null
+    isError: Boolean = false
 ) {
     var licensePlate by rememberSaveable { mutableStateOf("") } // State variable for license plate
 
@@ -458,8 +459,7 @@ fun LicensePlateInput(
         },
         label = { Text(stringResource(R.string.license_plate)) },
         keyboardType = KeyboardType.Text, // Allow alphanumeric input
-        isError = isError,
-        errorMessage = errorMessage
+        isError = isError
     )
 }
 
@@ -469,14 +469,12 @@ fun LicensePlateInput(
  * @param modifier Modifier for the ComboBox.
  * @param onStateChange Callback function to handle state changes.
  * @param isError Flag indicating if there's an error in input validation.
- * @param errorMessage Error message to display if isError is true.
  */
 @Composable
 fun StateInput(
     modifier: Modifier = Modifier,
     onStateChange: (String) -> Unit,
-    isError: Boolean = false,
-    errorMessage: String? = null
+    isError: Boolean = false
 ) {
     val usStates = listOf(
         "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
@@ -491,8 +489,7 @@ fun StateInput(
         options = usStates,
         onOptionSelected = onStateChange,
         label = { Text(stringResource(R.string.state)) },
-        isError = isError,
-        errorMessage = errorMessage
+        isError = isError
     )
 }
 

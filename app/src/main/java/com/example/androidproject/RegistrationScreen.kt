@@ -64,13 +64,16 @@ fun RegistrationScreen(validator: RegistrationInputValidator, modifier: Modifier
 
         // Additional UI elements for driver account input
         if (isDriverSelected) {
-            YearInput(onYearChange = { year = it },
+            YearInput(
+                onYearChange = { year = it },
                 isError = false // Prevents UI from displaying any error messages or applying error-specific styling when Composable is initially rendered
             )
-            MakeInput(onMakeChange = { make = it },
+            MakeInput(
+                onMakeChange = { make = it },
                 isError = false // Prevents UI from displaying any error messages or applying error-specific styling when Composable is initially rendered
             )
-            ModelInput(onModelChange = { model = it },
+            ModelInput(
+                onModelChange = { model = it },
                 isError = false // Prevents UI from displaying any error messages or applying error-specific styling when Composable is initially rendered
             )
             LicensePlateInput(onLicensePlateChange = {

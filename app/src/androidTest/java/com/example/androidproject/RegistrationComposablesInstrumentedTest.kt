@@ -270,8 +270,7 @@ class RegistrationComposablesInstrumentedTest {
             YearInput(
                 modifier = Modifier.testTag("year_input"),
                 onYearChange = { selectedYear = it },
-                isError = false,
-                errorMessage = null
+                isError = false
             )
         }
 
@@ -310,8 +309,7 @@ class RegistrationComposablesInstrumentedTest {
             MakeInput(
                 modifier = Modifier.testTag("make_input"),
                 onMakeChange = { selectedMake = it },
-                isError = false,
-                errorMessage = null
+                isError = false
             )
         }
 
@@ -350,8 +348,7 @@ class RegistrationComposablesInstrumentedTest {
             ModelInput(
                 modifier = Modifier.testTag("model_input"),
                 onModelChange = { selectedModel = it },
-                isError = false,
-                errorMessage = null
+                isError = false
             )
         }
 
@@ -422,8 +419,7 @@ class RegistrationComposablesInstrumentedTest {
             StateInput(
                 modifier = Modifier.testTag("state_input"),
                 onStateChange = { selectedState = it },
-                isError = false,
-                errorMessage = null
+                isError = false
             )
         }
 
