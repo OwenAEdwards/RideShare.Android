@@ -79,16 +79,21 @@ class RegistrationInputValidator {
     // TODO: Add server-side validation for valid car - check VIN number matches year, make, model, license plate, and state
     //                                                - validate the car is not already registered
     //                                                - check proof of insurance
-//    private fun isValidCar(year: String, make: String, model: String, licensePlate: String, state: String): Boolean
+//    private fun isValidCar(driverAccountRegistrationData: DriverAccountRegistrationData): Boolean
 
     /**
      * Validates the registration input for a passenger.
-     * @param email The email string to validate.
-     * @param password The password string to validate.
-     * @param firstName The first name string to validate.
-     * @param lastName The last name string to validate.
-     * @param phoneNumber The phone number string to validate.
-     * @param onValidationError Callback function to handle validation errors.
+     * This method checks for the following:
+     *  - Empty fields (email, password, first name, last name, phone number)
+     *  - Invalid email format
+     *  - Password complexity (8-20 characters, uppercase, lowercase, digit, special character)
+     *  - Name format (only letters)
+     *  - Phone number format (implementation required in isValidPhoneNumberFormat)
+     *  - Unique email address (server-side validation recommended, commented out)
+     *  - Valid email address (server-side validation recommended, commented out)
+     *
+     * @param passengerAccountRegistrationData An object containing passenger registration information.
+     * @param onValidationError Callback function to handle validation errors with a descriptive message.
      * @return True if all input fields are valid, otherwise false.
      */
     fun isValidPassengerRegistration(passengerAccountRegistrationData: PassengerAccountRegistrationData, onValidationError: (String) -> Unit): Boolean {
@@ -147,17 +152,22 @@ class RegistrationInputValidator {
 
     /**
      * Validates the registration input for a driver.
-     * @param email The email string to validate.
-     * @param password The password string to validate.
-     * @param firstName The first name string to validate.
-     * @param lastName The last name string to validate.
-     * @param phoneNumber The phone number string to validate.
-     * @param year The car year string to validate.
-     * @param make The car make string to validate.
-     * @param model The car model string to validate.
-     * @param licensePlate The car license plate string to validate.
-     * @param state The car registration state string to validate.
-     * @param onValidationError Callback function to handle validation errors.
+     *
+     * This method follows a two-step validation process:
+     *  1. **Passenger Information Validation:**
+     *     - It first delegates the validation of common passenger information (email, password, names, phone number)
+     *       to the `isValidPassengerRegistration` method. Reusing existing logic reduces code duplication.
+     *  2. **Driver-Specific Information Validation:**
+     *     - After successful passenger information validation, it checks for the following driver-specific fields:
+     *       - Year (ensures it's not empty)
+     *       - Make (ensures it's not empty)
+     *       - Model (ensures it's not empty)
+     *       - License Plate (ensures it's not empty and calls a new method `isValidLicensePlate` for format validation)
+     *       - State (ensures it's not empty)
+     *       - Server-side validation for valid car
+     *
+     * @param driverAccountRegistrationData An object containing driver registration information.
+     * @param onValidationError Callback function to handle validation errors with a descriptive message.
      * @return True if all input fields are valid, otherwise false.
      */
     fun isValidDriverRegistration(driverAccountRegistrationData: DriverAccountRegistrationData, onValidationError: (String) -> Unit): Boolean {
@@ -180,10 +190,19 @@ class RegistrationInputValidator {
             onValidationError("License plate cannot be empty")
             return false
         }
+        if (!isValidLicensePlate(driverAccountRegistrationData.licensePlate)) {
+            onValidationError("Invalid license plate format")
+            return false
+        }
         if (driverAccountRegistrationData.state.isBlank()) {
             onValidationError("State cannot be empty")
             return false
         }
+        // TODO: Add server-side validation for valid car
+//        if (!isValidCar(driverAccountRegistrationData)) {
+//            onValidationError("Invalid car information")
+//            return false
+//        }
         return true
     }
 }
