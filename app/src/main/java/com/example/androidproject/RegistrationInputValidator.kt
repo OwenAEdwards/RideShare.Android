@@ -1,5 +1,8 @@
 package com.example.androidproject
 
+import com.example.androidproject.data.DriverAccountRegistrationData
+import com.example.androidproject.data.PassengerAccountRegistrationData
+
 class RegistrationInputValidator {
     /**
      * Validates if the given email string matches the standard email format.
@@ -88,19 +91,12 @@ class RegistrationInputValidator {
      * @param onValidationError Callback function to handle validation errors.
      * @return True if all input fields are valid, otherwise false.
      */
-    fun isValidPassengerRegistration(
-        email: String,
-        password: String,
-        firstName: String,
-        lastName: String,
-        phoneNumber: String,
-        onValidationError: (String) -> Unit
-    ): Boolean {
-        if (email.isBlank()) {
+    fun isValidPassengerRegistration(passengerAccountRegistrationData: PassengerAccountRegistrationData, onValidationError: (String) -> Unit): Boolean {
+        if (passengerAccountRegistrationData.email.isBlank()) {
             onValidationError("Email cannot be empty")
             return false
         }
-        if (!isValidEmailFormat(email)) {
+        if (!isValidEmailFormat(passengerAccountRegistrationData.email)) {
             onValidationError("Invalid email format")
             return false
         }
@@ -114,35 +110,35 @@ class RegistrationInputValidator {
 //            onValidationError("Invalid email address")
 //            return false
 //        }
-        if (password.isBlank()) {
+        if (passengerAccountRegistrationData.password.isBlank()) {
             onValidationError("Password cannot be empty")
             return false
         }
-        if (!isValidPassword(password)) {
+        if (!isValidPassword(passengerAccountRegistrationData.password)) {
             onValidationError("Password must be 8-20 characters long, include at least one uppercase letter, one lowercase letter, one digit, and one special character")
             return false
         }
-        if (firstName.isBlank()) {
+        if (passengerAccountRegistrationData.firstName.isBlank()) {
             onValidationError("First name cannot be empty")
             return false
         }
-        if (!isValidName(firstName)) {
+        if (!isValidName(passengerAccountRegistrationData.firstName)) {
             onValidationError("First name must contain only letters")
             return false
         }
-        if (lastName.isBlank()) {
+        if (passengerAccountRegistrationData.lastName.isBlank()) {
             onValidationError("Last name cannot be empty")
             return false
         }
-        if (!isValidName(lastName)) {
+        if (!isValidName(passengerAccountRegistrationData.lastName)) {
             onValidationError("Last name must contain only letters")
             return false
         }
-        if (phoneNumber.isBlank()) {
+        if (passengerAccountRegistrationData.phoneNumber.isBlank()) {
             onValidationError("Phone number cannot be empty")
             return false
         }
-        if (!isValidPhoneNumberFormat(phoneNumber)) {
+        if (!isValidPhoneNumberFormat(passengerAccountRegistrationData.phoneNumber)) {
             onValidationError("Invalid phone number format")
             return false
         }
@@ -164,39 +160,27 @@ class RegistrationInputValidator {
      * @param onValidationError Callback function to handle validation errors.
      * @return True if all input fields are valid, otherwise false.
      */
-    fun isValidDriverRegistration(
-        email: String,
-        password: String,
-        firstName: String,
-        lastName: String,
-        phoneNumber: String,
-        year: String,
-        make: String,
-        model: String,
-        licensePlate: String,
-        state: String,
-        onValidationError: (String) -> Unit
-    ): Boolean {
-        if (!isValidPassengerRegistration(email, password, firstName, lastName, phoneNumber, onValidationError)) {
+    fun isValidDriverRegistration(driverAccountRegistrationData: DriverAccountRegistrationData, onValidationError: (String) -> Unit): Boolean {
+        if (!isValidPassengerRegistration(PassengerAccountRegistrationData(driverAccountRegistrationData.email, driverAccountRegistrationData.password, driverAccountRegistrationData.firstName, driverAccountRegistrationData.lastName, driverAccountRegistrationData.phoneNumber), onValidationError)) {
             return false
         }
-        if (year.isBlank()) {
+        if (driverAccountRegistrationData.year.isBlank()) {
             onValidationError("Year cannot be empty")
             return false
         }
-        if (make.isBlank()) {
+        if (driverAccountRegistrationData.make.isBlank()) {
             onValidationError("Make cannot be empty")
             return false
         }
-        if (model.isBlank()) {
+        if (driverAccountRegistrationData.model.isBlank()) {
             onValidationError("Model cannot be empty")
             return false
         }
-        if (licensePlate.isBlank()) {
+        if (driverAccountRegistrationData.licensePlate.isBlank()) {
             onValidationError("License plate cannot be empty")
             return false
         }
-        if (state.isBlank()) {
+        if (driverAccountRegistrationData.state.isBlank()) {
             onValidationError("State cannot be empty")
             return false
         }

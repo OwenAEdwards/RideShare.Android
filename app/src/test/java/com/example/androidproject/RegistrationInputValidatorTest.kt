@@ -1,5 +1,7 @@
 package com.example.androidproject
 
+import com.example.androidproject.data.DriverAccountRegistrationData
+import com.example.androidproject.data.PassengerAccountRegistrationData
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -25,11 +27,13 @@ class RegistrationInputValidatorTest {
     fun testValidPassengerRegistration() {
         assertTrue(
             validator.isValidPassengerRegistration(
+                PassengerAccountRegistrationData(
                 "test@example.com",
                 "Passw0rd!",
                 "John",
                 "Doe",
-                "(123) 456-7890",
+                "(123) 456-7890"
+                ),
                 mockValidationErrorCallback
             )
         )
@@ -39,11 +43,13 @@ class RegistrationInputValidatorTest {
     fun testEmptyEmail() {
         assertFalse(
             validator.isValidPassengerRegistration(
+                PassengerAccountRegistrationData(
                 "",
                 "Passw0rd!",
                 "John",
                 "Doe",
-                "(123) 456-7890",
+                "(123) 456-7890"
+                ),
                 mockValidationErrorCallback
             )
         )
@@ -54,11 +60,13 @@ class RegistrationInputValidatorTest {
     fun testInvalidEmailFormat() {
         assertFalse(
             validator.isValidPassengerRegistration(
+                PassengerAccountRegistrationData(
                 "invalidemail",
                 "Passw0rd!",
                 "John",
                 "Doe",
-                "(123) 456-7890",
+                "(123) 456-7890"
+                ),
                 mockValidationErrorCallback
             )
         )
@@ -77,11 +85,13 @@ class RegistrationInputValidatorTest {
     fun testEmptyPassword() {
         assertFalse(
             validator.isValidPassengerRegistration(
+                PassengerAccountRegistrationData(
                 "test@example.com",
                 "",
                 "John",
                 "Doe",
-                "(123) 456-7890",
+                "(123) 456-7890"
+                ),
                 mockValidationErrorCallback
             )
         )
@@ -92,11 +102,13 @@ class RegistrationInputValidatorTest {
     fun testInvalidPassword() {
         assertFalse(
             validator.isValidPassengerRegistration(
+                PassengerAccountRegistrationData(
                 "test@example.com",
                 "password",
                 "John",
                 "Doe",
-                "(123) 456-7890",
+                "(123) 456-7890"
+                ),
                 mockValidationErrorCallback
             )
         )
@@ -107,11 +119,13 @@ class RegistrationInputValidatorTest {
     fun testEmptyFirstName() {
         assertFalse(
             validator.isValidPassengerRegistration(
+                PassengerAccountRegistrationData(
                 "test@example.com",
                 "Passw0rd!",
                 "",
                 "Doe",
-                "(123) 456-7890",
+                "(123) 456-7890"
+                ),
                 mockValidationErrorCallback
             )
         )
@@ -126,11 +140,13 @@ class RegistrationInputValidatorTest {
     fun testEmptyLastName() {
         assertFalse(
             validator.isValidPassengerRegistration(
+                PassengerAccountRegistrationData(
                 "test@example.com",
                 "Passw0rd!",
                 "John",
                 "",
-                "(123) 456-7890",
+                "(123) 456-7890"
+                ),
                 mockValidationErrorCallback
             )
         )
@@ -145,11 +161,13 @@ class RegistrationInputValidatorTest {
     fun testEmptyPhoneNumber() {
         assertFalse(
             validator.isValidPassengerRegistration(
+                PassengerAccountRegistrationData(
                 "test@example.com",
                 "Passw0rd!",
                 "John",
                 "Doe",
-                "",
+                ""
+                ),
                 mockValidationErrorCallback
             )
         )
@@ -160,11 +178,13 @@ class RegistrationInputValidatorTest {
     fun testInvalidPhoneNumberFormat() {
         assertFalse(
             validator.isValidPassengerRegistration(
+                PassengerAccountRegistrationData(
                 "test@example.com",
                 "Passw0rd!",
                 "John",
                 "Doe",
-                "1234567890",
+                "1234567890"
+                ),
                 mockValidationErrorCallback
             )
         )
@@ -185,6 +205,7 @@ class RegistrationInputValidatorTest {
     fun testValidDriverRegistration() {
         assertTrue(
             validator.isValidDriverRegistration(
+                DriverAccountRegistrationData(
                 "test@example.com",
                 "Passw0rd!",
                 "John",
@@ -194,7 +215,8 @@ class RegistrationInputValidatorTest {
                 "Toyota",
                 "Camry",
                 "ABC123",
-                "CA",
+                "CA"
+                ),
                 mockValidationErrorCallback
             )
         )

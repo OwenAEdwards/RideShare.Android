@@ -12,6 +12,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.androidproject.data.DriverAccountRegistrationData
+import com.example.androidproject.data.PassengerAccountRegistrationData
 
 // Composable function to display the registration screen
 @Composable
@@ -86,14 +88,18 @@ fun RegistrationScreen(validator: RegistrationInputValidator, modifier: Modifier
             )
         }
 
+        // Create data objects to hold registration information
+        val driverAccountRegistrationData = DriverAccountRegistrationData(email, password, firstName, lastName, phoneNumber, year, make, model, licensePlate, state)
+        val passengerAccountRegistrationData = PassengerAccountRegistrationData(email, password, firstName, lastName, phoneNumber)
+
         // Validation logic for registration input
         val isValid = if (isDriverSelected) {
-            validator.isValidDriverRegistration(email, password, firstName, lastName, phoneNumber, year, make, model, licensePlate, state) {
+            validator.isValidDriverRegistration(driverAccountRegistrationData) {
                 errorMessage = it
             }
         }
         else {
-            validator.isValidPassengerRegistration(email, password, firstName, lastName, phoneNumber) {
+            validator.isValidPassengerRegistration(passengerAccountRegistrationData) {
                 errorMessage = it
             }
         }
@@ -109,12 +115,10 @@ fun RegistrationScreen(validator: RegistrationInputValidator, modifier: Modifier
                 // Handle registration logic based on account type
                 if (isValid) {
                     if (isDriverSelected) {
-                        val driverData = DriverData(email, password, firstName, lastName, phoneNumber, year, make, model, licensePlate, state)
-                        registerDriver(driverData)
+                        registerDriver(driverAccountRegistrationData)
                     }
                     else {
-                        val passengerData = PassengerData(email, password, firstName, lastName, phoneNumber)
-                        registerPassenger(passengerData)
+                        registerPassenger(passengerAccountRegistrationData)
                     }
                 } else {
                     // Show error messages for invalid fields
@@ -128,13 +132,13 @@ fun RegistrationScreen(validator: RegistrationInputValidator, modifier: Modifier
 }
 
 // Placeholder function to simulate registration process (replace with your actual logic)
-fun registerPassenger(passengerData: PassengerData) {
+fun registerPassenger(passengerData: PassengerAccountRegistrationData) {
     // Implement registration logic using email, password, etc.
     // TODO: add API call logic here
 }
 
-fun registerDriver(driverData: DriverData) {
-    registerPassenger(PassengerData(driverData.email, driverData.password, driverData.firstName, driverData.lastName, driverData.phoneNumber))
+fun registerDriver(driverAccountRegistrationData: DriverAccountRegistrationData) {
+    registerPassenger(PassengerAccountRegistrationData(driverAccountRegistrationData.email, driverAccountRegistrationData.password, driverAccountRegistrationData.firstName, driverAccountRegistrationData.lastName, driverAccountRegistrationData.phoneNumber))
     // Implement registration logic using email, password, etc.
     // TODO: add API call logic here
 }

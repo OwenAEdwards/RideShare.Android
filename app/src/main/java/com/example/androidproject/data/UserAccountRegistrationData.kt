@@ -1,6 +1,6 @@
-package com.example.androidproject
+package com.example.androidproject.data
 
-abstract class UserData(
+abstract class UserAccountRegistrationData(
     open val email: String,
     open val password: String,
     open val firstName: String,

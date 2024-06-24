@@ -1,6 +1,6 @@
-package com.example.androidproject
+package com.example.androidproject.data
 
-data class DriverData(
+data class DriverAccountRegistrationData(
     override val email: String,
     override val password: String,
     override val firstName: String,
@@ -11,4 +11,4 @@ data class DriverData(
     val model: String,
     val licensePlate: String,
     val state: String
-) : UserData(email, password, firstName, lastName, phoneNumber)
+) : UserAccountRegistrationData(email, password, firstName, lastName, phoneNumber)

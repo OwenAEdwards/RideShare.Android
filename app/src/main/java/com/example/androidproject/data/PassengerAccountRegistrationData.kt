@@ -1,9 +1,9 @@
-package com.example.androidproject
+package com.example.androidproject.data
 
-data class PassengerData(
+data class PassengerAccountRegistrationData(
     override val email: String,
     override val password: String,
     override val firstName: String,
     override val lastName: String,
     override val phoneNumber: String
-) : UserData(email, password, firstName, lastName, phoneNumber)
+) : UserAccountRegistrationData(email, password, firstName, lastName, phoneNumber)
