@@ -109,10 +109,12 @@ fun RegistrationScreen(validator: RegistrationInputValidator, modifier: Modifier
                 // Handle registration logic based on account type
                 if (isValid) {
                     if (isDriverSelected) {
-                        registerDriver(email, password, firstName, lastName, phoneNumber, year, make, model, licensePlate, state)
+                        val driverData = DriverData(email, password, firstName, lastName, phoneNumber, year, make, model, licensePlate, state)
+                        registerDriver(driverData)
                     }
                     else {
-                        registerPassenger(email, password, firstName, lastName, phoneNumber)
+                        val passengerData = PassengerData(email, password, firstName, lastName, phoneNumber)
+                        registerPassenger(passengerData)
                     }
                 } else {
                     // Show error messages for invalid fields
@@ -126,30 +128,13 @@ fun RegistrationScreen(validator: RegistrationInputValidator, modifier: Modifier
 }
 
 // Placeholder function to simulate registration process (replace with your actual logic)
-fun registerPassenger(
-    email: String,
-    password: String,
-    firstName: String,
-    lastName: String,
-    phoneNumber: String
-) {
+fun registerPassenger(passengerData: PassengerData) {
     // Implement registration logic using email, password, etc.
     // TODO: add API call logic here
 }
 
-fun registerDriver(
-    email: String,
-    password: String,
-    firstName: String,
-    lastName: String,
-    phoneNumber: String,
-    year: String,
-    make: String,
-    model: String,
-    licensePlate: String,
-    state: String
-) {
-    registerPassenger(email, password, firstName, lastName, phoneNumber)
+fun registerDriver(driverData: DriverData) {
+    registerPassenger(PassengerData(driverData.email, driverData.password, driverData.firstName, driverData.lastName, driverData.phoneNumber))
     // Implement registration logic using email, password, etc.
     // TODO: add API call logic here
 }

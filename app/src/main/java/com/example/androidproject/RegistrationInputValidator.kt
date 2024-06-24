@@ -76,7 +76,7 @@ class RegistrationInputValidator {
     // TODO: Add server-side validation for valid car - check VIN number matches year, make, model, license plate, and state
     //                                                - validate the car is not already registered
     //                                                - check proof of insurance
-//                if (!isValidCar(year, make, model, licensePlate, state))
+//    private fun isValidCar(year: String, make: String, model: String, licensePlate: String, state: String): Boolean
 
     /**
      * Validates the registration input for a passenger.
