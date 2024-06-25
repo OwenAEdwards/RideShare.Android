@@ -5,11 +5,13 @@ import com.example.androidproject.data.PassengerAccountRegistrationData
 
 class RegistrationInputValidator {
     /**
-     * Validates if the given email string matches the standard email format.
+     * Validates if the given email string matches the standard email format
+     * and is less than 50 characters long.
      * @param email The email string to validate.
-     * @return True if the email matches the standard format, otherwise false.
+     * @return True if the email matches the standard format and length limit, otherwise false.
      */
     private fun isValidEmailFormat(email: String): Boolean {
+        if (email.length > 50) return false
         val emailPattern = Regex(
             "[a-zA-Z0-9+._%\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}"
         )
@@ -40,22 +42,25 @@ class RegistrationInputValidator {
     // TODO: put a length limit on names, maybe?
     // TODO: Add server-side validation for valid name - make sure of no dirty names and stuff
     /**
-     * Validates if the given name string contains only letters from the Latin alphabet.
+     * Validates if the given name string contains only letters from the Latin alphabet
+     * and is less than 50 characters long.
      * @param name The name string to validate.
-     * @return True if the name contains only letters, otherwise false.
+     * @return True if the name contains only letters and adheres to the length limit, otherwise false.
      */
     private fun isValidName(name: String): Boolean {
+        if (name.length > 50) return false
         val nameRegex = Regex("^[a-zA-Z]+$")
         return nameRegex.matches(name)
     }
 
     /**
-     * Validates if the given phone number string matches the standard phone number format.
+     * Validates if the given phone number string adheres to either the standard US format
+     * (XXX) XXX-XXXX or exactly 10 digits.
      * @param phoneNumber The phone number string to validate.
-     * @return True if the phone number matches the standard format, otherwise false.
+     * @return True if the phone number matches one of the valid formats, otherwise false.
      */
     private fun isValidPhoneNumberFormat(phoneNumber: String): Boolean {
-        val phoneRegex = Regex("""^\(\d{3}\) \d{3}-\d{4}$""")
+        val phoneRegex = Regex("""^\(\d{3}\) \d{3}-\d{4}$|(^\d{10}$)""")
         return phoneRegex.matches(phoneNumber)
     }
 
@@ -67,12 +72,12 @@ class RegistrationInputValidator {
 
     /**
      * Validates if the given license plate string matches the standard license plate format.
-     * Format: 1-7 uppercase letters or digits.
+     * Format: 1-8 uppercase letters or digits.
      * @param licensePlate The license plate string to validate.
      * @return True if the license plate matches the standard format, otherwise false.
      */
     private fun isValidLicensePlate(licensePlate: String): Boolean {
-        val licenseRegex = Regex("""^[A-Z0-9]{1,7}$""")
+        val licenseRegex = Regex("""^[A-Z0-9]{1,8}$""")
         return licenseRegex.matches(licensePlate)
     }
 
@@ -144,7 +149,7 @@ class RegistrationInputValidator {
             return false
         }
         if (!isValidPhoneNumberFormat(passengerAccountRegistrationData.phoneNumber)) {
-            onValidationError("Invalid phone number format")
+            onValidationError("Invalid phone number format. Please use (XXX) XXX-XXXX or enter exactly 10 digits.")
             return false
         }
         return true
